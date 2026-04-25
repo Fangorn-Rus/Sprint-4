@@ -1,4 +1,4 @@
-package POM;
+package pom;
 
 import org.junit.Assert;
 import org.openqa.selenium.*;
@@ -34,9 +34,6 @@ public class SecondOrderPage {
     public void setOrderDate (String Date){
         driver.findElement(orderDate).sendKeys(Date);
         driver.findElement(By.tagName("body")).click(); // Закрыть календарь (кликнуть вне его)
-        //проверка
-/*        String enteredDate = driver.findElement(orderDate).getAttribute("value");
-        System.out.println("Введённая дата: " + enteredDate);*/
     }
     public void setRentalPeriod(String text){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -44,8 +41,6 @@ public class SecondOrderPage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".Dropdown-menu")));
         String xpath = String.format("//div[@class='Dropdown-option' and text()='%s']", text);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath))).click();
-        //проверка
-        //System.out.println("Выбранное значение: " + driver.findElement(By.cssSelector(".Dropdown-placeholder")).getText());
     }
     public void setColor (String color){
         if(color.equals("black")){
@@ -54,26 +49,16 @@ public class SecondOrderPage {
         if(color.equals("grey")){
             driver.findElement(colorGrey).click();
         }
-        //проверка
-/*        System.out.println("Чекбокс выбран: " + driver.findElement(colorGrey).isSelected());
-        System.out.println("Чекбокс выбран: " + driver.findElement(colorBlack).isSelected());*/
     }
     public void setComment(String text){
         driver.findElement(comment).sendKeys(text);
     }
 
     public void clickButtonOrder() {
-        //проверка
-/*        System.out.println("Кнопка 'Заказать' активна: " + driver.findElement(buttonOrder).isEnabled());
-        System.out.println("Кнопка 'Заказать' видима: " + driver.findElement(buttonOrder).isDisplayed());*/
         driver.findElement(buttonOrder).click();
-        //Проверка
-/*        System.out.println("Кнопка 'Да' активна: " + driver.findElement(buttonYes).isEnabled());
-        System.out.println("Кнопка 'Да' видима: " + driver.findElement(buttonYes).isDisplayed());*/
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOfElementLocated(buttonYes));
         driver.findElement(buttonYes).click();
-        //System.out.println("Кнопка 'Да' нажата, заказ подтверждён");
     }
     public void checkOrderStatus(){
         new WebDriverWait(driver, Duration.ofSeconds(5))
