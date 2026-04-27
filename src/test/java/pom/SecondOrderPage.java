@@ -1,10 +1,10 @@
 package pom;
 
-import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
+import java.util.Objects;
 
 public class SecondOrderPage {
     private final WebDriver driver;
@@ -26,6 +26,8 @@ public class SecondOrderPage {
     private final By windowStatus = By.xpath("//div[contains(text(), 'Заказ оформлен')]");
     //Локатор текста статуса заказа
     private final By orderStatus = By.xpath("//div[contains(@class, 'Order_ModalHeader__3FDaJ') and contains(text(), 'Заказ оформлен')]");
+    //Локатор для проверки, открыто ли поле заполнения заказа после нажатия на кнопку Заказать
+    private final By orderWindow = By.id("root");
 
     public SecondOrderPage(WebDriver driver) {
         this.driver = driver;
@@ -60,12 +62,16 @@ public class SecondOrderPage {
                 .until(ExpectedConditions.visibilityOfElementLocated(buttonYes));
         driver.findElement(buttonYes).click();
     }
-    public void checkOrderStatus(){
+    public boolean checkOrderStatus(){
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOfElementLocated(windowStatus));
-        Assert.assertTrue(
-                driver.findElement(orderStatus).getText().startsWith("Заказ оформлен")
-        );
+                  return driver.findElement(orderStatus).getText().startsWith("Заказ оформлен");
+    }
+
+    public boolean checkOpenOrderWindow(){
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOfElementLocated(orderWindow));
+        return Objects.requireNonNull(driver.getPageSource()).contains("Для кого самокат");
     }
 
 

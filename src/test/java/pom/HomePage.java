@@ -10,8 +10,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
 public class HomePage {
     private final WebDriver driver;
     //Все кнопки Заказать
@@ -19,34 +17,36 @@ public class HomePage {
 
     public HomePage(WebDriver driver) {       this.driver = driver;    }
 
-     public boolean checkDropdownListAnswer (int index, String expectedQuestion, String expectedAnswer){
+     public String[] checkDropdownText (int index){
+        String[] questionAndAnswer = new String[2];
          WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
          wait.until(ExpectedConditions.visibilityOfElementLocated(
                  By.id("accordion__heading-" + index)
          ));
-         WebElement question = driver.findElement(By.id("accordion__heading-" + index)); //находим вопрос по индексу
-         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", question);// Скроллим до элемента
-         wait.until(ExpectedConditions.elementToBeClickable(question)).click();
-         assertEquals(expectedQuestion, question.getText());
-
+         WebElement realQuestion = driver.findElement(By.id("accordion__heading-" + index));
+         questionAndAnswer[0] = realQuestion.getText();
+         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", realQuestion);
+         wait.until(ExpectedConditions.elementToBeClickable(realQuestion)).click();
          wait.until(ExpectedConditions.visibilityOfElementLocated(
                  By.id("accordion__panel-" + index)
          ));
-         WebElement realAnswer = driver.findElement(By.id("accordion__panel-" + index)); //находим текст ответа
-         return expectedAnswer.equals(realAnswer.getText()); //проверяем, верный ли текст в ответе
+         WebElement realAnswer = driver.findElement(By.id("accordion__panel-" + index));
+         questionAndAnswer[1] = realAnswer.getText();
+         return questionAndAnswer;
      }
 
     public void clickTopButton(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         List<WebElement> buttons = driver.findElements(orderButtons);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", buttons.get(0));
-        buttons.get(0).click();
+        wait.until(ExpectedConditions.elementToBeClickable(buttons.get(0))).click();
     }
 
     public void clickBottomButton (){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         List<WebElement> buttons = driver.findElements(orderButtons);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", buttons.get(1));
-        buttons.get(1).click();
+        wait.until(ExpectedConditions.elementToBeClickable(buttons.get(1))).click();
     }
 
     public void removeCookieBanner() {

@@ -1,6 +1,7 @@
-package Test;
+package test;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -9,11 +10,11 @@ import pom.FirstOrderPage;
 import pom.HomePage;
 import pom.SecondOrderPage;
 
+import static org.junit.Assert.assertTrue;
+
 @RunWith(Parameterized.class)
-public class TestButtons{
+public class TestTopButton {
     public static final String url = "https://qa-scooter.praktikum-services.ru/";
-    public static final String firefoxBrowser = "firefox";
-    public static final String chromeBrowser = "chrome";
     public WebDriver driver;
 
     private final String name;
@@ -25,11 +26,9 @@ public class TestButtons{
     private final String rentalPeriodText;
     private final String color;
     private final String commentText;
-    private final String browser;
 
-    public TestButtons(String name, String surname, String address, String stationName, String phoneNumber,
-                                      String orderDate, String rentalPeriodText, String color, String commentText,
-                                        String browser) {
+    public TestTopButton(String name, String surname, String address, String stationName, String phoneNumber,
+                         String orderDate, String rentalPeriodText, String color, String commentText) {
         this.name = name;
         this.surname = surname;
         this.address = address;
@@ -39,7 +38,12 @@ public class TestButtons{
         this.rentalPeriodText = rentalPeriodText;
         this.color = color;
         this.commentText = commentText;
-        this.browser = browser;
+    }
+
+    @Before
+    public void setUp() {
+        driver = new SetUpBrowsers().getDriver();
+        driver.get(url);
     }
 
     @Parameterized.Parameters
@@ -54,7 +58,6 @@ public class TestButtons{
                         , "двое суток"
                         , "black"
                         , "Привезите быстрее!"
-                        , firefoxBrowser
                 },
                 {         "Лев"
                         , "Толстой"
@@ -65,7 +68,6 @@ public class TestButtons{
                         , "сутки"
                         , "grey"
                         , "Я подожду."
-                        , firefoxBrowser
                 },
                 {         "Александр"
                         , "Пушкин"
@@ -76,7 +78,6 @@ public class TestButtons{
                         , "двое суток"
                         , "black"
                         , "Привезите быстрее!"
-                        , chromeBrowser
                 },
                 {         "Лев"
                         , "Толстой"
@@ -87,15 +88,12 @@ public class TestButtons{
                         , "сутки"
                         , "grey"
                         , "Я подожду."
-                        , chromeBrowser
                 },
         };
     }
 
     @Test
     public void TopButtonTest(){
-        driver = new SetUpBrowsers().getDriver(browser);
-        driver.get(url);
         HomePage objHomePage = new HomePage(driver);
         FirstOrderPage objFirstOrderPage = new FirstOrderPage(driver);
         SecondOrderPage objSecondOrderPage = new SecondOrderPage(driver);
@@ -115,17 +113,9 @@ public class TestButtons{
         objSecondOrderPage.setColor(color);
         objSecondOrderPage.setComment(commentText);
         objSecondOrderPage.clickButtonOrder();
-        objSecondOrderPage.checkOrderStatus();
-    }
 
-    @Test
-    public void BottomButtonTest(){
-        driver = new SetUpBrowsers().getDriver(browser);
-        driver.get(url);
-        HomePage objHomePage = new HomePage(driver);
+        assertTrue(objSecondOrderPage.checkOrderStatus());
 
-        objHomePage.removeCookieBanner();
-        objHomePage.clickBottomButton();
     }
 
     @After
