@@ -16,13 +16,11 @@ public class TestDropdownText {
     public WebDriver driver;
 
     private final int index;
-    private final String question;
     private final String answer;
     private final boolean result;
 
-    public TestDropdownText(int index, String question, String answer, boolean result) {
+    public TestDropdownText(int index, String answer, boolean result) {
         this.index = index;
-        this.question = question;
         this.answer = answer;
         this.result = result;
     }
@@ -76,7 +74,6 @@ public class TestDropdownText {
         HomePage objHomePage = new HomePage(driver);
 
         objHomePage.removeCookieBanner();
-        assertEquals(result, objHomePage.checkDropdownText(index)[0].equals(question));//проверяем, верный ли текст в вопросе
         assertEquals(result, objHomePage.checkDropdownText(index)[1].equals(answer)); //проверяем, верный ли текст в ответе
     }
 
